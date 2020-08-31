@@ -1,9 +1,10 @@
 let x = 0
 let y = 0
 let coord : number[] = []
+let sideLength = 5
 let direction = 0
 let offset = 0
-function dirCoord(distance: number, offset: number, direction: number): number[] {
+function mapCoord(distance: number, offset: number, direction: number): number[] {
     
     //  east
     if (direction == 0) {
@@ -22,26 +23,18 @@ function dirCoord(distance: number, offset: number, direction: number): number[]
     return coord
 }
 
-function plotCoord(coord: number[], mode: boolean = true) {
-    if (mode) {
-        led.plot(coord[0], coord[1])
-    } else {
-        led.unplot(coord[0], coord[1])
-    }
-    
+function plotCoord(coord: number[], brightness: number = 255) {
+    led.plotBrightness(coord[0], coord[1], brightness)
 }
 
 function shoot() {
-    let coord1: number[];
-    let coord: number[];
     
     direction = randint(0, 3)
-    offset = randint(0, 4)
-    for (let distance = 0; distance < 6; distance++) {
-        coord1 = dirCoord(distance - 1, offset, direction)
-        plotCoord(coord1, false)
-        coord = dirCoord(distance, offset, direction)
-        plotCoord(coord)
+    offset = randint(0, sideLength - 1)
+    for (let distance = 0; distance < sideLength + 2; distance++) {
+        plotCoord(mapCoord(distance - 2, offset, direction), 0)
+        plotCoord(mapCoord(distance - 1, offset, direction), 50)
+        plotCoord(mapCoord(distance, offset, direction), 200)
         basic.pause(100)
     }
 }

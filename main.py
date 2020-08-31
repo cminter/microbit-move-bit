@@ -1,9 +1,10 @@
 x = 0
 y = 0
 coord: List[number] = []
+sideLength = 5
 direction = 0
 offset = 0
-def dirCoord(distance: number, offset: number, direction: number):
+def mapCoord(distance: number, offset: number, direction: number):
     global x, y, coord
     # east
     if direction == 0: coord = [distance, offset]
@@ -14,18 +15,16 @@ def dirCoord(distance: number, offset: number, direction: number):
     # north
     elif direction == 3:  coord = [offset, 4 - distance]
     return coord
-def plotCoord(coord, mode = True):
-    if mode:  led.plot(coord[0], coord[1])
-    else:  led.unplot(coord[0], coord[1])
+def plotCoord(coord, brightness = 255):
+    led.plot_brightness(coord[0], coord[1], brightness)
 def shoot():
-    global direction, offset
+    global direction, offset, sideLength
     direction = randint(0, 3)
-    offset = randint(0, 4)
-    for distance in range(6):
-        coord1 = dirCoord(distance - 1, offset, direction)
-        plotCoord(coord1, False)
-        coord = dirCoord(distance, offset, direction)
-        plotCoord(coord)
+    offset = randint(0, sideLength - 1)
+    for distance in range(sideLength + 2):
+        plotCoord(mapCoord(distance - 2, offset, direction), 0)
+        plotCoord(mapCoord(distance - 1, offset, direction), 50)
+        plotCoord(mapCoord(distance, offset, direction), 200)
         basic.pause(100)
 
 def on_forever():
